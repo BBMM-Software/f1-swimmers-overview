@@ -10,6 +10,10 @@ Swimming Overview desktop application
     npm -g ionic/cli
     npm install
     ionic build
-    npx cap update electron
+    npx cap sync electron
     npx cap open electron
+    npx electron-packager .
 ```
+
+
+https://stackoverflow.com/questions/31286924/how-to-deploy-an-electron-app-as-an-executable-or-installable-in-windows
