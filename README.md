@@ -7,13 +7,17 @@ Swimming Overview desktop application
 - ability to generate the ranking pdf report for each event
 
 ```bash
-    npm -g ionic/cli
+
+    // initial commands
+    npm i -g @ionic/cli
     npm install
-    ionic build
-    npx cap sync electron
-    npx cap open electron
-    npx electron-packager .
+
+    // build commands after each change
+    ionic build // build changes
+    npx cap sync electron // sync changes from ionic build
+    npx cap open electron // open elenctron app
+    npx electron-packager . // build desktop executable
 ```
 
 
-https://stackoverflow.com/questions/31286924/how-to-deploy-an-electron-app-as-an-executable-or-installable-in-windows
+- https://stackoverflow.com/questions/31286924/how-to-deploy-an-electron-app-as-an-executable-or-installable-in-windows
