@@ -5,3 +5,11 @@ Swimming Overview desktop application
 - ability to add swimmers for each series
 - ability to rank all swimmers 
 - ability to generate the ranking pdf report for each event
+
+```bash
+    npm -g ionic/cli
+    npm install
+    ionic build
+    npx cap update electron
+    npx cap open electron
+```
