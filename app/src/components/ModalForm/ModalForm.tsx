@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonList, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonList, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import React, { useState } from "react";
 import styles from './ModalForm.module.css'
 import { useGlobal } from "../../services/global.store";
@@ -41,6 +41,7 @@ const ModalForm: React.FC<Props> = ({isOpen, onClose}) => {
                     />
             </IonContent>
             <IonFooter style={{display: 'flex'}} className="ion-justify-content-end ion-padding">
+                <IonButton className="ion-margin-end" onClick={() => onClose()}>Close</IonButton>
                 <IonButton onClick={() => handleSubmit()}>Create</IonButton>
             </IonFooter>
         </IonModal>

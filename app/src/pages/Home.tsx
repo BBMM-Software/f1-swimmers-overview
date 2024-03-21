@@ -20,20 +20,15 @@ const Home: React.FC = () => {
 
     const [events, addEvent, removeEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent]);
     const [selectedValue, setSelectedValue] = useState();
-    const [isModalOpen, setIsModalOpen] = useState(true)
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        // const event: EventS = {name: "Event 1", series: [], id: "1" };
-        // addEvent(event);
-    }, [])
-    
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
                     <IonTitle>Swimmers Overview</IonTitle>
                     <IonItem slot="end" lines="none">
-                        <IonButton fill="clear" onClick={() => {console.log("test")}}>
+                        <IonButton fill="clear" onClick={() => setIsModalOpen(true)}>
                             <IonIcon icon={add}/>
                         </IonButton>
                         <IonSelect
