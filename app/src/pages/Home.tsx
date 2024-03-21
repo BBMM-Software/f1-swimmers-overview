@@ -10,21 +10,21 @@ import {
     IonIcon,
     IonItem
 } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import {add} from 'ionicons/icons';
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from '../services/global.store';
-import { EventS } from '../models/Event';
+import ModalForm from '../components/ModalForm/ModalForm';
 
 const Home: React.FC = () => {
 
     const [events, addEvent, removeEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent]);
     const [selectedValue, setSelectedValue] = useState();
+    const [isModalOpen, setIsModalOpen] = useState(true)
 
     useEffect(() => {
-        const event: EventS = {name: "Event 1", series: [], id: "1" };
-        addEvent(event);
+        // const event: EventS = {name: "Event 1", series: [], id: "1" };
+        // addEvent(event);
     }, [])
     
     return (
@@ -55,8 +55,8 @@ const Home: React.FC = () => {
                         <IonTitle size="large">Blank</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <ExploreContainer/>
             </IonContent>
+            <ModalForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </IonPage>
     );
 };
