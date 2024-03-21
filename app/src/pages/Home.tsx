@@ -13,13 +13,20 @@ import {
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import {add} from 'ionicons/icons';
-import React from 'react';
-import Store from 'electron-store'
+import React, { useEffect, useState } from 'react';
+import { useGlobal } from '../services/global.store';
+import { EventS } from '../models/Event';
 
 const Home: React.FC = () => {
 
-    const [selectedValue, setSelectedValue] = React.useState('');
+    const [events, addEvent, removeEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent]);
+    const [selectedValue, setSelectedValue] = useState();
 
+    useEffect(() => {
+        const event: EventS = {name: "Event 1", series: [], id: "1" };
+        addEvent(event);
+    }, [])
+    
     return (
         <IonPage>
             <IonHeader>
@@ -35,9 +42,9 @@ const Home: React.FC = () => {
                             onIonChange={e => setSelectedValue(e.detail.value)}
                             interface="popover"
                         >
-                            <IonSelectOption>Event 1</IonSelectOption>
-                            <IonSelectOption>Event 2</IonSelectOption>
-                            <IonSelectOption>Event 3</IonSelectOption>
+                            {events.map(event => (
+                                <IonSelectOption value={event.id}>{event.name}</IonSelectOption>
+                            ))}
                         </IonSelect>
                     </IonItem>
                 </IonToolbar>
