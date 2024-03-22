@@ -20,6 +20,7 @@
     "@capacitor/status-bar": "5.0.7",
     "@ionic/react": "^7.0.0",
     "@ionic/react-router": "^7.0.0",
+    "@react-pdf/renderer": "^3.4.0",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "chokidar": "^3.6.0",
@@ -28,11 +29,13 @@
     "electron-unhandled": "^4.0.1",
     "electron-updater": "^6.1.8",
     "electron-window-state": "^5.0.3",
+    "immer": "^10.0.4",
     "ionicons": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@capacitor/cli": "5.7.4",
