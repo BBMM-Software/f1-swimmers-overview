@@ -3,10 +3,12 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { EventS } from '../models/Event';
 import * as events from "events";
+import {RankedSwimmer} from "../models/RankedSwimmer";
 
 export interface GlobalState {
     events: EventS[];
     totalNumber: number;
+    rankedSwimmers: RankedSwimmer[];
 }
 
 export interface GlobalActions {
@@ -18,6 +20,12 @@ export interface GlobalActions {
 const initialState: GlobalState = {
     events: [],
     totalNumber: 0,
+    rankedSwimmers: [
+        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
+        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
+        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
+        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
+    ],
 };
 
 export const useGlobal = create<GlobalState & GlobalActions>()(
