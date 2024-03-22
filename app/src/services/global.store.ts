@@ -35,10 +35,8 @@ export const useGlobal = create<GlobalState & GlobalActions>()(
                 }),
             updateEvent: (updatedEvent: EventS) =>
                 set((draft) => {
-                    const index = get().events.findIndex(event => event.id === updatedEvent.id);
-                    if (index !== -1) {
-                        draft.events[index] = updatedEvent;
-                    }
+                    const events = get().events.filter(event => event.id !== updatedEvent.id);
+                    draft.events = [...events, updatedEvent];
                 }),
         })),
         {

@@ -9,7 +9,6 @@ import {
     IonButton,
     IonIcon,
     IonItem,
-    IonList,
     IonInput,
     IonRow
 } from '@ionic/react';
@@ -23,17 +22,25 @@ import {EventS} from "../models/Event";
 const Home: React.FC = () => {
 
     const [events, addEvent, removeEvent, updateEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent, state.updateEvent]);
-    const [selectedEventId, setSelectedEventId] = useState();
+    const [selectedEventId, setSelectedEventId] = useState<number | undefined>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<EventS | undefined>();
 
     const getEventFromId = (e: EventS[], id: number | undefined) => e.find(el => el.id == id);
     const getSelectedEventName = (e: EventS | undefined) => e == undefined ? "none" : e.name;
     const addSeries = (event: EventS) => {
-        event.series.push({id: event.series.length + 1, swimmers: []})
+        const series = [...event.series, {id: event.series.length + 1, swimmers: []}];
         setSelectedEvent(event)
-        updateEvent(event)
+        updateEvent({...event, series: series})
     }
+
+    useEffect(() => {
+        if (selectedEvent) {
+            const myEvent = events.find(event => event.id === selectedEventId)
+            setSelectedEvent(myEvent)
+            setSelectedEventId(myEvent?.id);
+        }
+    }, [events])
 
     return (
         <IonPage>
