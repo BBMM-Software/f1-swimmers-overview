@@ -8,19 +8,32 @@ import {
     IonSelectOption,
     IonButton,
     IonIcon,
-    IonItem
+    IonItem,
+    IonList,
+    IonInput,
+    IonRow
 } from '@ionic/react';
 import './Home.css';
 import {add} from 'ionicons/icons';
-import React, { useEffect, useState } from 'react';
-import { useGlobal } from '../services/global.store';
+import React, {FormEventHandler, useEffect, useState} from 'react';
+import {useGlobal} from '../services/global.store';
 import ModalForm from '../components/ModalForm/ModalForm';
+import {EventS} from "../models/Event";
 
 const Home: React.FC = () => {
 
-    const [events, addEvent, removeEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent]);
-    const [selectedValue, setSelectedValue] = useState();
+    const [events, addEvent, removeEvent, updateEvent] = useGlobal(state => [state.events, state.addEvent, state.removeEvent, state.updateEvent]);
+    const [selectedEventId, setSelectedEventId] = useState();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<EventS | undefined>();
+
+    const getEventFromId = (e: EventS[], id: number | undefined) => e.find(el => el.id == id);
+    const getSelectedEventName = (e: EventS | undefined) => e == undefined ? "none" : e.name;
+    const addSeries = (event: EventS) => {
+        event.series.push({id: event.series.length + 1, swimmers: []})
+        setSelectedEvent(event)
+        updateEvent(event)
+    }
 
     return (
         <IonPage>
@@ -32,9 +45,13 @@ const Home: React.FC = () => {
                             <IonIcon icon={add}/>
                         </IonButton>
                         <IonSelect
-                            value={selectedValue}
+                            value={selectedEventId}
                             placeholder="Select One"
-                            onIonChange={e => setSelectedValue(e.detail.value)}
+                            onIonChange={e => {
+                                setSelectedEventId(e.detail.value);
+                                setSelectedEvent(getEventFromId(events, e.detail.value))
+                            }
+                            }
                             interface="popover"
                         >
                             {events.map(event => (
@@ -45,13 +62,55 @@ const Home: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
+                <h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
+                {
+                    selectedEvent &&
+                    <div>
+                        <div>
+                            <IonRow className="ion-justify-content-around">
+                                <h3>Add Series</h3>
+                                <IonButton onClick={() => addSeries(selectedEvent)}>Add New Series</IonButton>
+                            </IonRow>
+                        </div>
+                        {selectedEvent.series.map(series => (
+                            <div>
+                                <h4>Series {series.id} of {selectedEvent.series.length}</h4>
+                                <h3>Add Swimmer:</h3>
+                                <form>
+                                    <IonRow>
+                                        <IonItem>
+                                            <IonInput label="Lane"></IonInput>
+                                        </IonItem>
+
+                                        <IonItem>
+                                            <IonInput label="Name"></IonInput>
+                                        </IonItem>
+
+                                        <IonItem>
+                                            <IonInput label="Age"></IonInput>
+                                        </IonItem>
+
+                                        <IonItem>
+                                            <IonInput label="Team"></IonInput>
+                                        </IonItem>
+
+                                        <IonItem>
+                                            <IonInput label="Time"></IonInput>
+                                        </IonItem>
+                                    </IonRow>
+                                </form>
+                            </div>
+                        ))}
+
+                    </div>
+                }
                 <IonHeader collapse="condense">
                     <IonToolbar>
                         <IonTitle size="large">Blank</IonTitle>
                     </IonToolbar>
                 </IonHeader>
             </IonContent>
-            <ModalForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <ModalForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
         </IonPage>
     );
 };

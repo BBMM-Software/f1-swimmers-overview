@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { EventS } from '../models/Event';
+import * as events from "events";
 
 export interface GlobalState {
     events: EventS[];
@@ -10,6 +11,7 @@ export interface GlobalState {
 
 export interface GlobalActions {
     addEvent: (event: EventS) => void;
+    updateEvent: (event: EventS) => void;
     removeEvent: (id: number) => void;
 }
 
@@ -30,6 +32,13 @@ export const useGlobal = create<GlobalState & GlobalActions>()(
             removeEvent: (id: number) =>
                 set((draft) => {
                     draft.events = get().events.filter(event => event.id !== id);
+                }),
+            updateEvent: (updatedEvent: EventS) =>
+                set((draft) => {
+                    const index = get().events.findIndex(event => event.id === updatedEvent.id);
+                    if (index !== -1) {
+                        draft.events[index] = updatedEvent;
+                    }
                 }),
         })),
         {
