@@ -12,13 +12,13 @@ import {
     IonInput,
     IonRow
 } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 import {add} from 'ionicons/icons';
 import React, {FormEventHandler, useEffect, useState} from 'react';
 import {useGlobal} from '../services/global.store';
 import ModalForm from '../components/ModalForm/ModalForm';
 import {EventS} from "../models/Event";
+import MainContent from "../components/MainContent";
 
 const Home: React.FC = () => {
 
