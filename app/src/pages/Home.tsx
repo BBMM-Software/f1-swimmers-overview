@@ -97,12 +97,6 @@ const Home: React.FC = () => {
 							<IonIcon icon={arrowBack} />
 						</IonButton>
 						<h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
-						<div>
-							<IonRow className="ion-justify-content-around">
-								<h3>Add Series</h3>
-								<IonButton onClick={() => addSeries(selectedEvent)}>Add New Series</IonButton>
-							</IonRow>
-						</div>
 						{selectedEvent && (
 							<div>
 								<div>
