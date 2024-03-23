@@ -1,24 +1,28 @@
 import {
+    IonButton,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
     IonContent,
     IonHeader,
+    IonIcon,
+    IonInput,
+    IonItem,
     IonPage,
-    IonTitle,
-    IonToolbar,
+    IonRow,
     IonSelect,
     IonSelectOption,
-    IonButton,
-    IonIcon,
-    IonItem,
-    IonInput,
-    IonRow
+    IonTitle,
+    IonToolbar
 } from '@ionic/react';
 import './Home.css';
-import {add} from 'ionicons/icons';
-import React, {FormEventHandler, useEffect, useState} from 'react';
+import {add, arrowBack} from 'ionicons/icons';
+import React, {useEffect, useState} from 'react';
 import {useGlobal} from '../services/global.store';
 import ModalForm from '../components/ModalForm/ModalForm';
 import {EventS} from "../models/Event";
-import MainContent from "../components/MainContent";
 
 const Home: React.FC = () => {
 
@@ -33,6 +37,11 @@ const Home: React.FC = () => {
         const series = [...event.series, {id: event.series.length + 1, swimmers: []}];
         setSelectedEvent(event)
         updateEvent({...event, series: series})
+    }
+
+    const selectNone = () => {
+        setSelectedEvent(undefined);
+        setSelectedEventId(undefined);
     }
 
     useEffect(() => {
@@ -70,10 +79,15 @@ const Home: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-                <h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
                 {
                     selectedEvent &&
-                    <div>
+                    <div className="event-wrapper">
+                        <IonButton onClick={() => {
+                            selectNone()
+                        }}>
+                            <IonIcon icon={arrowBack}/>
+                        </IonButton>
+                        <h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
                         <div>
                             <IonRow className="ion-justify-content-around">
                                 <h3>Add Series</h3>
@@ -117,7 +131,39 @@ const Home: React.FC = () => {
                         <IonTitle size="large">Blank</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <MainContent/>
+                {
+                    !selectedEvent &&
+                    <div className="card-container">
+                        <IonCard className="custom-card ion-text-center">
+                            <IonCardHeader>
+                                <IonCardTitle>Swimming Events</IonCardTitle>
+                                <IonCardSubtitle>Please select an event from the list bellow or create a new
+                                    one</IonCardSubtitle>
+                            </IonCardHeader>
+                            <IonCardContent class="card-content">
+                                <IonCard color="light" className="content-card">
+                                    {/* Each list item is now a card */}
+                                    {events.map(event => (
+                                        <IonCard className="list-item-card" button
+                                                 onClick={() => {
+                                                     setSelectedEventId(event.id);
+                                                     setSelectedEvent(event)
+                                                 }}>
+                                            <IonCardHeader>
+                                                <IonCardTitle>{event.name}</IonCardTitle>
+                                            </IonCardHeader>
+                                        </IonCard>
+                                    ))}
+                                </IonCard>
+                                <div className="button-wrapper">
+                                    <IonButton className="button" onClick={() => setIsModalOpen(true)}>Add new
+                                        event</IonButton> {/* Add event button */}
+                                </div>
+                            </IonCardContent>
+
+                        </IonCard>
+                    </div>
+                }
             </IonContent>
             <ModalForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}/>
         </IonPage>
