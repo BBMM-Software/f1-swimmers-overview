@@ -1,12 +1,30 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonSelect, IonSelectOption, IonButton, IonIcon, IonItem, IonInput, IonRow } from "@ionic/react";
+import {
+	IonButton,
+	IonCard,
+	IonCardContent,
+	IonCardHeader,
+	IonCardSubtitle,
+	IonCardTitle,
+	IonContent,
+	IonHeader,
+	IonIcon,
+	IonInput,
+	IonItem,
+	IonPage,
+	IonRow,
+	IonSelect,
+	IonSelectOption,
+	IonTitle,
+	IonToolbar,
+} from "@ionic/react";
 import "./Home.css";
-import { add } from "ionicons/icons";
-import React, { FormEventHandler, useEffect, useState } from "react";
+import { add, arrowBack } from "ionicons/icons";
+import React, { useEffect, useState } from "react";
 import { useGlobal } from "../services/global.store";
 import ModalForm from "../components/ModalForm/ModalForm";
 import { EventS } from "../models/Event";
-import SwimmerForm from "../components/SwimmerForm/SwimmerForm";
 import _ from "lodash";
+import SwimmerForm from "../components/SwimmerForm/SwimmerForm";
 
 const Home: React.FC = () => {
 	const [events, addEvent, removeEvent, updateEvent] = useGlobal((state) => [state.events, state.addEvent, state.removeEvent, state.updateEvent]);
@@ -21,14 +39,19 @@ const Home: React.FC = () => {
 			...event.series,
 			{
 				id: event.series.length + 1,
-				swimmers: _.range(0, 6).map((index) => ({ id: index, name: "", age: 0, team: "", lane: 0, time: ""})),
+				swimmers: _.range(0, 6).map((index) => ({ id: index, name: "", age: 0, team: "", lane: 0, time: "" })),
 			},
 		];
 		setSelectedEvent(event);
 		updateEvent({ ...event, series: series });
 	};
 
-    console.log("EVENTS", events);
+	console.log("EVENTS", events);
+
+	const selectNone = () => {
+		setSelectedEvent(undefined);
+		setSelectedEventId(undefined);
+	};
 
 	useEffect(() => {
 		if (selectedEvent) {
@@ -63,28 +86,45 @@ const Home: React.FC = () => {
 					</IonItem>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen className="ion-padding">
-				<h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
+			<IonContent fullscreen>
 				{selectedEvent && (
-					<div>
+					<div className="event-wrapper">
+						<IonButton
+							onClick={() => {
+								selectNone();
+							}}
+						>
+							<IonIcon icon={arrowBack} />
+						</IonButton>
+						<h1>Selected event is: {getSelectedEventName(selectedEvent)}</h1>
 						<div>
 							<IonRow className="ion-justify-content-around">
 								<h3>Add Series</h3>
 								<IonButton onClick={() => addSeries(selectedEvent)}>Add New Series</IonButton>
 							</IonRow>
 						</div>
-						{selectedEvent.series.map((series) => (
+						{selectedEvent && (
 							<div>
-								<h4>
-									Series {series.id} of {selectedEvent.series.length}
-								</h4>
-								<h3>Add Swimmer:</h3>
+								<div>
+									<IonRow className="ion-justify-content-around">
+										<h3>Add Series</h3>
+										<IonButton onClick={() => addSeries(selectedEvent)}>Add New Series</IonButton>
+									</IonRow>
+								</div>
+								{selectedEvent.series.map((series) => (
+									<div>
+										<h4>
+											Series {series.id} of {selectedEvent.series.length}
+										</h4>
+										<h3>Add Swimmer:</h3>
 
-								{_.range(0, 6).map((index) => (
-									<SwimmerForm initialSwimmer={series.swimmers[index]} eventId={selectedEventId} seriesId={series.id} index={index} />
+										{_.range(0, 6).map((index) => (
+											<SwimmerForm initialSwimmer={series.swimmers[index]} eventId={selectedEventId} seriesId={series.id} index={index} />
+										))}
+									</div>
 								))}
 							</div>
-						))}
+						)}
 					</div>
 				)}
 				<IonHeader collapse="condense">
@@ -92,6 +132,41 @@ const Home: React.FC = () => {
 						<IonTitle size="large">Blank</IonTitle>
 					</IonToolbar>
 				</IonHeader>
+				{!selectedEvent && (
+					<div className="card-container">
+						<IonCard className="custom-card ion-text-center">
+							<IonCardHeader>
+								<IonCardTitle>Swimming Events</IonCardTitle>
+								<IonCardSubtitle>Please select an event from the list bellow or create a new one</IonCardSubtitle>
+							</IonCardHeader>
+							<IonCardContent class="card-content">
+								<IonCard color="light" className="content-card">
+									{/* Each list item is now a card */}
+									{events.map((event) => (
+										<IonCard
+											className="list-item-card"
+											button
+											onClick={() => {
+												setSelectedEventId(event.id);
+												setSelectedEvent(event);
+											}}
+										>
+											<IonCardHeader>
+												<IonCardTitle>{event.name}</IonCardTitle>
+											</IonCardHeader>
+										</IonCard>
+									))}
+								</IonCard>
+								<div className="button-wrapper">
+									<IonButton className="button" onClick={() => setIsModalOpen(true)}>
+										Add new event
+									</IonButton>{" "}
+									{/* Add event button */}
+								</div>
+							</IonCardContent>
+						</IonCard>
+					</div>
+				)}
 			</IonContent>
 			<ModalForm isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 		</IonPage>
