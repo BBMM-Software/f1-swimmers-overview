@@ -1,7 +1,6 @@
 export type Swimmer = {
-    id: string; // something that means uuid
-    firstname: string;
-    lastname: string;
+    id: number;
+    name: string;
     age: number;
     team: string;
     time: string;
