@@ -40,7 +40,7 @@ const Home: React.FC = () => {
 			...event.series,
 			{
 				id: event.series.length + 1,
-				swimmers: _.range(0, 6).map((index) => ({ id: index, name: "", age: 0, team: "", lane: 0, time: "" })),
+				swimmers: _.range(0, 6).map((index) => ({ id: index, name: "", age: 0, team: "", lane: 0, time: 0 })),
 			},
 		];
 		setSelectedEvent(event);
