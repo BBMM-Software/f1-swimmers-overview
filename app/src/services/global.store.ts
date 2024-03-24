@@ -3,29 +3,28 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { EventS } from '../models/Event';
 import * as events from "events";
-import {RankedSwimmer} from "../models/RankedSwimmer";
+import {Swimmer} from "../models/Swimmer";
 
 export interface GlobalState {
     events: EventS[];
     totalNumber: number;
-    rankedSwimmers: RankedSwimmer[];
+    swimmers: Swimmer[];
+    selectedEvent: EventS|undefined;
 }
 
 export interface GlobalActions {
     addEvent: (event: EventS) => void;
     updateEvent: (event: EventS) => void;
     removeEvent: (id: number) => void;
+    updateSwimmers : (swimmers: Swimmer[]) => void;
+    setSelectedEvent: (event: EventS|undefined) => void;
 }
 
 const initialState: GlobalState = {
     events: [],
     totalNumber: 0,
-    rankedSwimmers: [
-        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
-        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
-        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
-        {place: 1, name: "Leonor Morcos", age: 8, team: "Acuatica", time: 1.22},
-    ],
+    swimmers: [],
+    selectedEvent: undefined,
 };
 
 export const useGlobal = create<GlobalState & GlobalActions>()(
@@ -45,6 +44,14 @@ export const useGlobal = create<GlobalState & GlobalActions>()(
                 set((draft) => {
                     const events = get().events.filter(event => event.id !== updatedEvent.id);
                     draft.events = [...events, updatedEvent];
+                }),
+            updateSwimmers : (swimmers: Swimmer[]) =>
+                set((draft) => {
+                    draft.swimmers = swimmers;
+                }),
+            setSelectedEvent: (event: EventS|undefined) =>
+                set((draft) => {
+                    draft.selectedEvent = event;
                 }),
         })),
         {

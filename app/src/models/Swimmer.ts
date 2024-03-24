@@ -3,6 +3,6 @@ export type Swimmer = {
     name: string;
     age: number;
     team: string;
-    time: string;
+    time: number;
     lane: number;
 }

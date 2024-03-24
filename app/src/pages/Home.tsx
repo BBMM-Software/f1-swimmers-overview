@@ -25,9 +25,10 @@ import ModalForm from "../components/ModalForm/ModalForm";
 import { EventS } from "../models/Event";
 import _ from "lodash";
 import SwimmerForm from "../components/SwimmerForm/SwimmerForm";
+import {Swimmer} from "../models/Swimmer";
 
 const Home: React.FC = () => {
-	const [events, addEvent, removeEvent, updateEvent] = useGlobal((state) => [state.events, state.addEvent, state.removeEvent, state.updateEvent]);
+	const [events, addEvent, removeEvent, updateEvent, updateSwimmers, setSelectedEventGlobal] = useGlobal((state) => [state.events, state.addEvent, state.removeEvent, state.updateEvent, state.updateSwimmers, state.setSelectedEvent]);
 	const [selectedEventId, setSelectedEventId] = useState<number | undefined>();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState<EventS | undefined>();
@@ -46,7 +47,17 @@ const Home: React.FC = () => {
 		updateEvent({ ...event, series: series });
 	};
 
-	console.log("EVENTS", events);
+	const exportToPdf = (e : EventS | undefined) => {
+		if(!e){
+			return;
+		}
+		const allSwimmersForSelectedEvent: Swimmer[] = e.series.flatMap(series => series.swimmers);
+		const filledSwimmers = allSwimmersForSelectedEvent.filter(
+            (swimmer) => swimmer.lane && swimmer.name && swimmer.age != 0 && swimmer.team
+        );
+		updateSwimmers(filledSwimmers)
+		window.open("/pdfexport");
+	};
 
 	const selectNone = () => {
 		setSelectedEvent(undefined);
@@ -76,6 +87,7 @@ const Home: React.FC = () => {
 							onIonChange={(e) => {
 								setSelectedEventId(e.detail.value);
 								setSelectedEvent(getEventFromId(events, e.detail.value));
+								setSelectedEventGlobal(getEventFromId(events, e.detail.value));
 							}}
 							interface="popover"
 						>
@@ -101,8 +113,8 @@ const Home: React.FC = () => {
 							<div>
 								<div>
 									<IonRow className="ion-justify-content-around">
-										<h3>Add Series</h3>
 										<IonButton onClick={() => addSeries(selectedEvent)}>Add New Series</IonButton>
+										<IonButton onClick={() => exportToPdf(selectedEvent)}>Export to PDF</IonButton>
 									</IonRow>
 								</div>
 								{selectedEvent.series.map((series) => (
@@ -143,6 +155,7 @@ const Home: React.FC = () => {
 											onClick={() => {
 												setSelectedEventId(event.id);
 												setSelectedEvent(event);
+												setSelectedEventGlobal(event);
 											}}
 										>
 											<IonCardHeader>

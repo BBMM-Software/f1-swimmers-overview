@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {PDFViewer, View, Text, Page, Document, StyleSheet} from "@react-pdf/renderer"
 import {useGlobal} from "../services/global.store";
 
@@ -28,14 +28,17 @@ const styles = StyleSheet.create({
     },
 });
 const PdfExport: React.FC = () => {
-    const [swimmers] = useGlobal(state => [state.rankedSwimmers]);
+    const [swimmers, selectedEvent] = useGlobal(state => [state.swimmers, state.selectedEvent]);
+
+    let sortedSwimmers = swimmers;
+    sortedSwimmers.sort((a,b) => a.time - b.time)
 
     return(
         <PDFViewer width="100%" height="100%">
             <Document>
                 <Page size="A4" >
                     <View>
-                        <Text style={styles.title}>Name of the event</Text>
+                        <Text style={styles.title}>Event: {selectedEvent?.name}</Text>
                     </View>
                     {/*Table Header*/}
                     <View style={styles.table}>
@@ -46,9 +49,9 @@ const PdfExport: React.FC = () => {
                         <Text style={styles.tableElementShort}> Time(s) </Text>
                     </View>
                     {/*Table Content*/}
-                    {swimmers.map(swimmer => (
+                    {sortedSwimmers.map((swimmer,index) => (
                         <View style={styles.table}>
-                            <Text style={styles.tableElementShort}> {swimmer.place} </Text>
+                            <Text style={styles.tableElementShort}> {index+1} </Text>
                             <Text style={styles.tableElementLong}> {swimmer.name} </Text>
                             <Text style={styles.tableElementShort}> {swimmer.age} </Text>
                             <Text style={styles.tableElementLong}> {swimmer.team} </Text>

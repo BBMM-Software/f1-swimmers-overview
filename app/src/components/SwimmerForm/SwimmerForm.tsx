@@ -21,6 +21,9 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 	const time = useRef(null);
 
 	useEffect(() => {
+		if(!lane||!age||!team||!time){
+			return;
+		}
 		lane.current.value = initialSwimmer.lane;
 		name.current.value = initialSwimmer.name;
 		age.current.value = initialSwimmer.age;
@@ -33,7 +36,7 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 		let nameValue = name.current.value;
 		let ageValue = parseInt(age.current.value);
 		let teamValue = team.current.value;
-		let timeValue = time.current.value;
+		let timeValue = parseFloat(time.current.value);
 		const event = events.find((event) => event.id === eventId);
 		if (event) {
 			let serie = event.series.find((serie) => serie.id === seriesId);
@@ -45,7 +48,6 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 							id: seriesId,
 							swimmers: _.range(0, 6).map((index) => {
 								if (indexSwimmer === index) {
-									console.log("muie");
 									return { id: index, name: nameValue, age: ageValue, team: teamValue, lane: laneValue, time: timeValue };
 								}
 								return swimmers[index];
@@ -120,6 +122,7 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 					<IonItem>
 						<IonInput
 							ref={time}
+							type="number"
 							label="Time"
 							defaultValue={initialSwimmer.time}
 							onIonChange={(e) => {
