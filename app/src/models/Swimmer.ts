@@ -5,4 +5,5 @@ export type Swimmer = {
     team: string;
     time: number;
     lane: number;
+    dq: boolean;
 }

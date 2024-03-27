@@ -1,4 +1,4 @@
-import { IonCol, IonInput, IonItem, IonRow } from "@ionic/react";
+import { IonCol, IonInput, IonItem, IonRow, IonCheckbox } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useGlobal } from "../../services/global.store";
 import _, { indexOf, isNumber } from "lodash";
@@ -19,6 +19,7 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 	const age = useRef(null);
 	const team = useRef(null);
 	const time = useRef(null);
+	const dq = useRef(null);
 
 	useEffect(() => {
 		if(!lane||!age||!team||!time){
@@ -32,11 +33,13 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 	}, []);
 
 	const handleChange = () => {
+		// console.log("DQ IS" + dq.current.checked);
 		let laneValue = parseInt(lane.current.value);
 		let nameValue = name.current.value;
 		let ageValue = parseInt(age.current.value);
 		let teamValue = team.current.value;
 		let timeValue = parseFloat(time.current.value);
+		let dqValue : boolean = dq.current.checked
 		const event = events.find((event) => event.id === eventId);
 		if (event) {
 			let serie = event.series.find((serie) => serie.id === seriesId);
@@ -48,7 +51,7 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 							id: seriesId,
 							swimmers: _.range(0, 6).map((index) => {
 								if (indexSwimmer === index) {
-									return { id: index, name: nameValue, age: ageValue, team: teamValue, lane: laneValue, time: timeValue };
+									return { id: index, name: nameValue, age: ageValue, team: teamValue, lane: laneValue, time: timeValue, dq: dqValue };
 								}
 								return swimmers[index];
 							}),
@@ -129,6 +132,19 @@ const SwimmerForm: React.FC<Props> = ({ initialSwimmer, eventId, seriesId, index
 								handleChange();
 							}}
 						/>
+					</IonItem>
+				</IonCol>
+				<IonCol>
+					<IonItem>
+						<IonCheckbox
+							ref={dq}
+							checked={initialSwimmer.dq}
+							onIonChange={(e) => {
+								handleChange();
+							}}
+							labelPlacement="start">
+							Disqualified
+						</IonCheckbox>
 					</IonItem>
 				</IonCol>
 			</IonRow>
