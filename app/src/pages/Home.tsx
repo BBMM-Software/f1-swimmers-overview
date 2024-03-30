@@ -150,7 +150,7 @@ const Home: React.FC = () => {
 									{/* Each list item is now a card */}
 									{events.map((event) => (
 										<IonCard
-											className="list-item-card"
+											className="list-item-card ion-padding"
 											button
 											onClick={() => {
 												setSelectedEventId(event.id);
@@ -158,9 +158,12 @@ const Home: React.FC = () => {
 												setSelectedEventGlobal(event);
 											}}
 										>
-											<IonCardHeader>
-												<IonCardTitle>{event.name}</IonCardTitle>
-											</IonCardHeader>
+											<IonRow className="ion-justify-content-between">
+												<IonCardHeader>
+													<IonCardTitle>{event.name}</IonCardTitle>
+												</IonCardHeader>
+												<IonButton onClick={(prop) => {removeEvent(event.id); prop.stopPropagation();}}>Delete event</IonButton>
+											</IonRow>
 										</IonCard>
 									))}
 								</IonCard>
